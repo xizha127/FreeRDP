@@ -979,8 +979,10 @@ bool SdlRailWindow::restoreRectPending() const
 
 bool SdlRailWindow::effectivelyMaximized() const
 {
-	return _maxState.rail ||
-	       (_win && (SDL_GetWindowFlags(_win->window()) & SDL_WINDOW_MAXIMIZED) != 0);
+	// The RAIL state is updated for both compositor and server maximize events.
+	// SDL's cached Wayland flag may remain maximized after a server restore;
+	// treating that stale flag as authoritative prevents all geometry sync.
+	return _maxState.rail;
 }
 
 bool SdlRailWindow::paint(SDL_Surface* primary, SDL_PixelFormat fallbackFormat,
