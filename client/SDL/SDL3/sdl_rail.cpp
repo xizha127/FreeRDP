@@ -1159,8 +1159,8 @@ void SdlRail::syncGeometry(SDL_WindowID id)
 	/* Drop transient echo events while client geometry application is in flight. */
 	if (w->geomApplyPending())
 	{
-		/* Allow live Wayland compositor resize to advance beyond in-flight apply. */
-		const bool overtaken = !posKnown && ((lw > vis.w) || (lh > vis.h));
+		/* The compositor can override an in-flight size in either direction. */
+		const bool overtaken = !posKnown && ((lw != vis.w) || (lh != vis.h));
 		if (!overtaken)
 			return;
 		w->clearGeomApplyPending();
